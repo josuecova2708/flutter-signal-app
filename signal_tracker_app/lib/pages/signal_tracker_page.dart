@@ -82,7 +82,7 @@ class _SignalTrackerPageState extends State<SignalTrackerPage> {
         signalStrength = null;
         networkType = 'N/A o Error';
       }
-
+// AUMENTAR AL BACKEND TAMBIÉN
       // 3.1 Información de la SIM usando flutter_sim_data
       String? simCarrierName = 'N/A';
       String? simDisplayName = 'N/A';

@@ -8,6 +8,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:network_info_plus/network_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_internet_signal/flutter_internet_signal.dart';
+import 'package:flutter_sim_data/sim_data.dart';
 
 import '../api/signals_api.dart';
 import 'signal_history_page.dart';
@@ -82,6 +83,28 @@ class _SignalTrackerPageState extends State<SignalTrackerPage> {
         networkType = 'N/A o Error';
       }
 
+      // 3.1 Información de la SIM usando flutter_sim_data
+      String? simCarrierName = 'N/A';
+      String? simDisplayName = 'N/A';
+      String? simSlotIndex = 'N/A';
+      String? simCountryCode = 'N/A';
+
+      try {
+        final simData = SimData();
+        final simCards = await simData.getSimData();
+
+        if (simCards != null && simCards.isNotEmpty) {
+          // Tomamos la primera SIM (o puedes iterar sobre todas)
+          final firstSim = simCards.first;
+          simCarrierName = firstSim.carrierName;
+          simDisplayName = firstSim.displayName;
+          simSlotIndex = firstSim.simSlotIndex.toString();
+          simCountryCode = firstSim.countryCode;
+        }
+      } catch (e) {
+        simCarrierName = 'Error: ${e.toString()}';
+      }
+
       // 4. Red
       final rawConnectivityResult = await Connectivity().checkConnectivity();
       List<String> connectionTypes = [
@@ -112,6 +135,12 @@ class _SignalTrackerPageState extends State<SignalTrackerPage> {
           'signal_strength_dbm': signalStrength,
           'network_operator': networkOperator,
           'network_type': networkType,
+          'sim_info': {
+            'carrier_name': simCarrierName,
+            'display_name': simDisplayName,
+            'slot_index': simSlotIndex,
+            'country_code': simCountryCode,
+          },
           'note': signalStrength == null
               ? 'Sin datos de señal o permiso faltante'
               : 'dBm obtenido de forma nativa con flutter_internet_signal',
@@ -313,6 +342,21 @@ class _SignalTrackerPageState extends State<SignalTrackerPage> {
                     Text(
                         'Operador: ${collectedData!['cellular']['network_operator']}'),
                     Text('Tipo: ${collectedData!['cellular']['network_type']}'),
+                    const Divider(),
+                    const Text('📱 Info de SIM:',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 14)),
+                    Text(
+                        'Operadora: ${collectedData!['cellular']['sim_info']['carrier_name']}',
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w600, color: Colors.blue)),
+                    Text(
+                        'Nombre: ${collectedData!['cellular']['sim_info']['display_name']}'),
+                    Text(
+                        'Slot: ${collectedData!['cellular']['sim_info']['slot_index']}'),
+                    Text(
+                        'País: ${collectedData!['cellular']['sim_info']['country_code']}'),
+                    const Divider(),
                     Text(collectedData!['cellular']['note'] as String,
                         style: const TextStyle(
                             fontSize: 13, fontStyle: FontStyle.italic)),

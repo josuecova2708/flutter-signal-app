@@ -22,6 +22,9 @@ dependencies:
   # Para info del dispositivo
   device_info_plus: ^9.1.1
   
+  
+  flutter_sim_data: ^1.0.5
+  
   flutter_internet_signal: ^0.0.1
      
   # Para obtener IP

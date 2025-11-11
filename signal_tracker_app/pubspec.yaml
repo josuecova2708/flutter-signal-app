@@ -1,0 +1,41 @@
+name: signal_tracker_app
+description: Signal tracker app with dBm measurement
+
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # Para obtener ubicación GPS
+  geolocator: ^10.1.0
+  
+  # Para obtener info de red y señal celular
+  connectivity_plus: ^5.0.2
+  
+  phone_state: ^3.0.1 # Esta SÍ da señal real
+
+  # Para info del dispositivo
+  device_info_plus: ^9.1.1
+  
+  flutter_internet_signal: ^0.0.1
+     
+  # Para obtener IP
+  network_info_plus: ^5.0.1
+
+  # Para HTTP requests
+  http: ^1.1.2
+  # Para permisos
+  permission_handler: ^11.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_launcher_icons: ^0.13.1
+
+flutter:
+  uses-material-design: true
